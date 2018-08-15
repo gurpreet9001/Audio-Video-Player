@@ -11,9 +11,13 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="batplayer.FXMLDocumentController">
    <bottom>
-      <VBox prefHeight="7.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="7.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom>
+   <center>
+      <StackPane prefHeight="410.0" prefWidth="621.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="25.0" prefWidth="668.0">
+            <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" />
+            <HBox prefHeight="393.0" prefWidth="510.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#handleButtonAction" text="Open" />
                   <Button mnemonicParsing="false" onAction="#playVideo" text="Play" />
@@ -31,12 +35,6 @@
                   </Slider>
                </children>
             </HBox>
-         </children>
-      </VBox>
-   </bottom>
-   <center>
-      <StackPane prefHeight="410.0" prefWidth="621.0" BorderPane.alignment="CENTER">
-         <children>
             <Slider fx:id="seekslider" prefHeight="14.0" prefWidth="561.0" StackPane.alignment="BOTTOM_CENTER">
                <StackPane.margin>
                   <Insets />
@@ -45,7 +43,6 @@
                   <Insets bottom="5.0" />
                </padding>
             </Slider>
-            <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" />
          </children>
       </StackPane>
    </center>

@@ -89,7 +89,10 @@ public class FXMLDocumentController implements Initializable {
        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
            @Override
            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                if(seekslider.isPressed())
+                    newValue=Duration.seconds(seekslider.getValue());
                seekslider.setValue(newValue.toSeconds());
+              
            }
        });
        

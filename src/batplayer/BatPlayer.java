@@ -28,12 +28,15 @@ public class BatPlayer extends Application {
         scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent doubleClicked) {
-                if(doubleClicked.getClickCount()==2){
+                 if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==true){
+                stage.setFullScreen(false);}
+          
+            else if(doubleClicked.getClickCount()==2){
                 stage.setFullScreen(true);}
             }
         });
         
-       
+      
         stage.setScene(scene);
         stage.show();
     }
