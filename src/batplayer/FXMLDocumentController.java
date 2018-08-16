@@ -19,9 +19,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import static sun.audio.AudioPlayer.player;
@@ -50,6 +52,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
+       
        FileChooser fc=new FileChooser();
        FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select a File (*.mp4)","*.mp4");
        fc.getExtensionFilters().add(filter);
@@ -90,6 +93,7 @@ public class FXMLDocumentController implements Initializable {
        
        mediaPlayer.play();
        
+   
        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
            @Override
            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -102,6 +106,21 @@ public class FXMLDocumentController implements Initializable {
        
        }
     }
+    
+    @FXML
+    private void keyPressed(KeyEvent event) {
+            switch (event.getCode()) {
+            case SPACE:
+               mediaPlayer.pause();
+                break;
+            case ENTER:mediaPlayer.play();break;       
+            default:
+                break;
+            }
+            
+        }
+    
+    
     
     @FXML
     private void pauseVideo(ActionEvent event){

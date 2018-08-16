@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="batplayer.FXMLDocumentController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onInputMethodTextChanged="#keyPressed" onKeyPressed="#keyPressed" onKeyReleased="#keyPressed" onKeyTyped="#keyPressed" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="batplayer.FXMLDocumentController">
    <bottom>
       <VBox prefHeight="7.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
@@ -18,7 +18,7 @@
       <StackPane prefHeight="410.0" prefWidth="621.0" BorderPane.alignment="CENTER">
          <children>
             <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" />
-            <Slider fx:id="seekslider" minWidth="-Infinity" prefHeight="14.0" prefWidth="561.0" StackPane.alignment="BOTTOM_CENTER">
+            <Slider fx:id="seekslider" focusTraversable="false" minWidth="-Infinity" prefHeight="14.0" prefWidth="561.0" StackPane.alignment="BOTTOM_CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -33,43 +33,43 @@
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#handleButtonAction" text="Open">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleButtonAction" text="Open">
                      <HBox.margin>
                         <Insets right="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#playVideo" text="Play">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#playVideo" text="Play">
                      <HBox.margin>
                         <Insets top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#pauseVideo" text="Pause">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#pauseVideo" text="Pause">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#stopVideo" text="Stop">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#stopVideo" text="Stop">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#slowerVideo" text="&lt;&lt;">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#slowerVideo" text="&lt;&lt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#slowVideo" text="&lt;">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#slowVideo" text="&lt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#fastVideo" text="&gt;">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#fastVideo" text="&gt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#fasterVideo" text="&gt;&gt;">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#fasterVideo" text="&gt;&gt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#exitVideo" text="Exit">
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#exitVideo" text="Exit">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin></Button>
-                  <Slider fx:id="slider" HBox.hgrow="NEVER">
+                  <Slider fx:id="slider" focusTraversable="false" onInputMethodTextChanged="#keyPressed" onKeyPressed="#keyPressed" onKeyReleased="#keyPressed" onKeyTyped="#keyPressed" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets top="7.0" />
                      </HBox.margin>
