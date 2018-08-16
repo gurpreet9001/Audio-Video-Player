@@ -46,6 +46,9 @@ public class FXMLDocumentController implements Initializable {
     private Slider seekslider;
     
     @FXML
+    private Label playTime;
+    
+    @FXML
     private void handleButtonAction(ActionEvent event) {
        FileChooser fc=new FileChooser();
        FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select a File (*.mp4)","*.mp4");
@@ -86,13 +89,14 @@ public class FXMLDocumentController implements Initializable {
        });
        
        mediaPlayer.play();
+       
        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
            @Override
            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 if(seekslider.isPressed())
                     newValue=Duration.seconds(seekslider.getValue());
                seekslider.setValue(newValue.toSeconds());
-              
+              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
            }
        });
        
@@ -131,6 +135,45 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void exitVideo(ActionEvent event){
         System.exit(0);
+    }
+    
+    private static String formatTime(Duration elapsed, Duration duration) {
+   int intElapsed = (int)Math.floor(elapsed.toSeconds());
+   int elapsedHours = intElapsed / (60 * 60);
+   if (elapsedHours > 0) {
+       intElapsed -= elapsedHours * 60 * 60;
+   }
+   int elapsedMinutes = intElapsed / 60;
+   int elapsedSeconds = intElapsed - elapsedHours * 60 * 60 
+                           - elapsedMinutes * 60;
+ 
+   if (duration.greaterThan(Duration.ZERO)) {
+      int intDuration = (int)Math.floor(duration.toSeconds());
+      int durationHours = intDuration / (60 * 60);
+      if (durationHours > 0) {
+         intDuration -= durationHours * 60 * 60;
+      }
+      int durationMinutes = intDuration / 60;
+      int durationSeconds = intDuration - durationHours * 60 * 60 - 
+          durationMinutes * 60;
+      if (durationHours > 0) {
+         return String.format("%d:%02d:%02d/%d:%02d:%02d", 
+            elapsedHours, elapsedMinutes, elapsedSeconds,
+            durationHours, durationMinutes, durationSeconds);
+      } else {
+          return String.format("%02d:%02d/%02d:%02d",
+            elapsedMinutes, elapsedSeconds,durationMinutes, 
+                durationSeconds);
+      }
+      } else {
+          if (elapsedHours > 0) {
+             return String.format("%d:%02d:%02d", elapsedHours, 
+                    elapsedMinutes, elapsedSeconds);
+            } else {
+                return String.format("%02d:%02d",elapsedMinutes, 
+                    elapsedSeconds);
+            }
+        }
     }
     
     @Override
