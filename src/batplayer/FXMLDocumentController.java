@@ -3,8 +3,9 @@ package batplayer;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.util.Duration;
-import static java.util.Locale.filter;
 import java.util.ResourceBundle;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -19,14 +20,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
-import static sun.audio.AudioPlayer.player;
 
 /**
  *
@@ -120,7 +123,80 @@ public class FXMLDocumentController implements Initializable {
             
         }
     
+     @FXML
+            public void dragcame(DragEvent event) {
+                if (event.getDragboard().hasFiles()) {
+                    /*
+                     * allow for both copying and moving, whatever user chooses
+                     */
+                    event.acceptTransferModes(TransferMode.COPY);
+                }
+                event.consume();
+                
+            }
     
+    @FXML
+    @SuppressWarnings("empty-statement")
+            public void dragdropped(DragEvent event) {
+               Dragboard db = event.getDragboard();
+                List<File> files = (ArrayList<File>) db.getContent(DataFormat.FILES);
+
+            
+                if (files != null) {
+                    File file = files.get(0);
+                     filePath =file.toURI().toString();
+                
+                    System.out.println(filePath);
+       Media media =new Media(filePath);
+       mediaPlayer =new MediaPlayer(media);
+       mediaView.setMediaPlayer(mediaPlayer);
+                  
+        DoubleProperty width=mediaView.fitWidthProperty();
+       DoubleProperty height=mediaView.fitHeightProperty();
+       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
+       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
+       
+       
+       
+       slider.setValue(mediaPlayer.getVolume()*100);
+       
+       slider.valueProperty().addListener(new InvalidationListener() {
+           @Override
+           public void invalidated(Observable observable) {
+               mediaPlayer.setVolume(slider.getValue()/100);
+           }
+       });
+       
+      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
+    mediaPlayer.totalDurationProperty()));
+       
+       
+       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
+           }
+       });
+       
+       mediaPlayer.play();
+       
+   
+       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+           @Override
+           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                if(seekslider.isPressed())
+                    newValue=Duration.seconds(seekslider.getValue());
+               seekslider.setValue(newValue.toSeconds());
+              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
+           }
+       });
+       
+       
+                }
+   
+                event.consume();
+            }
+
     
     @FXML
     private void pauseVideo(ActionEvent event){
