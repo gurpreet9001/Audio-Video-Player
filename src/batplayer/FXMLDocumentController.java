@@ -32,6 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -46,6 +47,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -80,7 +82,7 @@ public class FXMLDocumentController implements Initializable {
     private Button playlistid;
     
     void playmyvideo(String filePath){
-        System.out.println(filePath);
+        
         
       Media media =new Media(filePath);
        mediaPlayer =new MediaPlayer(media);
@@ -213,11 +215,25 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void exitVideo(ActionEvent event){
-        System.exit(0);
+        //System.exit(0);
+        
+         WritableImage writableImage = mediaView.snapshot(new SnapshotParameters(), null);
+ 
+            File file = new File("capturedRoot.png");
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
+                System.out.println("Captured: " + file.getAbsolutePath());
+            } catch (IOException ex) {
+                
+            }
     }
   
     @FXML
     private void makeplaylist(ActionEvent event) throws IOException{
+         
+         PlaylistFXMLController.arrlist.clear();
+        
+        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PlaylistFXML.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
         Stage stage = new Stage();
@@ -228,6 +244,7 @@ public class FXMLDocumentController implements Initializable {
        Stage stage1 = (Stage) playlistid.getScene().getWindow();
        // do what you have to do
        stage1.close();
+       mediaPlayer.stop();
     }
     
     int i=0;
