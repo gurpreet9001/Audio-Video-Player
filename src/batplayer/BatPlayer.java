@@ -24,6 +24,8 @@ import javafx.util.Duration;
  */
 public class BatPlayer extends Application {
 
+    
+    
     static boolean isSplashLoaded=false;
     
     @Override
@@ -87,6 +89,7 @@ public class BatPlayer extends Application {
    
     public static void main(String[] args) {
         launch(args);
+        
     }
     
 }

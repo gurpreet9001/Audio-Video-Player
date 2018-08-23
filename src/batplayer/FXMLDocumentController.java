@@ -1,6 +1,12 @@
 
 package batplayer;
 
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -17,14 +23,19 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -37,12 +48,17 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javax.imageio.ImageIO;
+import javax.swing.text.html.ImageView;
 
 /**
  *
  * @author gurpreet9001
  */
 public class FXMLDocumentController implements Initializable {
+    
+    
     
     private MediaPlayer mediaPlayer;
     
@@ -59,6 +75,9 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private Label playTime;
+    
+    @FXML
+    private Button playlistid;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -238,6 +257,196 @@ public class FXMLDocumentController implements Initializable {
     private void exitVideo(ActionEvent event){
         System.exit(0);
     }
+  
+    @FXML
+    private void makeplaylist(ActionEvent event) throws IOException{
+     
+        
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PlaylistFXML.fxml"));
+Parent root1 = (Parent) fxmlLoader.load();
+Stage stage = new Stage();
+stage.setScene(new Scene(root1));  
+stage.show();
+
+
+      // get a handle to the stage
+ Stage stage1 = (Stage) playlistid.getScene().getWindow();
+    // do what you have to do
+    stage1.close();
+    }
+    
+    int i=0;
+    
+      @FXML
+    private void next(ActionEvent event){
+        mediaPlayer.stop();
+        if(i<PlaylistFXMLController.arrlist.size()-1){
+        
+        i++;}
+        
+        filePath =PlaylistFXMLController.arrlist.get(i);
+                
+       Media media =new Media(filePath);
+       mediaPlayer =new MediaPlayer(media);
+       mediaView.setMediaPlayer(mediaPlayer);
+       
+       DoubleProperty width=mediaView.fitWidthProperty();
+       DoubleProperty height=mediaView.fitHeightProperty();
+       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
+       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
+       
+       
+       
+       slider.setValue(mediaPlayer.getVolume()*100);
+       
+       slider.valueProperty().addListener(new InvalidationListener() {
+           @Override
+           public void invalidated(Observable observable) {
+               mediaPlayer.setVolume(slider.getValue()/100);
+           }
+       });
+       
+      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
+    mediaPlayer.totalDurationProperty()));
+       
+       
+       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
+           }
+       });
+       
+       mediaPlayer.play();
+       
+   
+       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+           @Override
+           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                if(seekslider.isPressed())
+                    newValue=Duration.seconds(seekslider.getValue());
+               seekslider.setValue(newValue.toSeconds());
+              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
+           }
+       });
+       
+    }
+    
+    @FXML
+    private void previous(ActionEvent event){
+        mediaPlayer.stop();
+        if(i>0){
+        
+        i--;}
+        
+        filePath =PlaylistFXMLController.arrlist.get(i);
+                
+       Media media =new Media(filePath);
+       mediaPlayer =new MediaPlayer(media);
+       mediaView.setMediaPlayer(mediaPlayer);
+       
+       DoubleProperty width=mediaView.fitWidthProperty();
+       DoubleProperty height=mediaView.fitHeightProperty();
+       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
+       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
+       
+       
+       
+       slider.setValue(mediaPlayer.getVolume()*100);
+       
+       slider.valueProperty().addListener(new InvalidationListener() {
+           @Override
+           public void invalidated(Observable observable) {
+               mediaPlayer.setVolume(slider.getValue()/100);
+           }
+       });
+       
+      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
+    mediaPlayer.totalDurationProperty()));
+       
+       
+       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
+           }
+       });
+       
+       mediaPlayer.play();
+       
+   
+       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+           @Override
+           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                if(seekslider.isPressed())
+                    newValue=Duration.seconds(seekslider.getValue());
+               seekslider.setValue(newValue.toSeconds());
+              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
+           }
+       });
+       
+    }
+    
+    @FXML
+    private void startplaylist(ActionEvent event){
+        filePath =PlaylistFXMLController.arrlist.get(i);
+                
+       Media media =new Media(filePath);
+       mediaPlayer =new MediaPlayer(media);
+       mediaView.setMediaPlayer(mediaPlayer);
+       
+       DoubleProperty width=mediaView.fitWidthProperty();
+       DoubleProperty height=mediaView.fitHeightProperty();
+       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
+       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
+       
+       
+       
+       slider.setValue(mediaPlayer.getVolume()*100);
+       
+       slider.valueProperty().addListener(new InvalidationListener() {
+           @Override
+           public void invalidated(Observable observable) {
+               mediaPlayer.setVolume(slider.getValue()/100);
+           }
+       });
+       
+      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
+    mediaPlayer.totalDurationProperty()));
+       
+       
+       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
+           }
+       });
+       
+       mediaPlayer.play();
+       
+   
+       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+           @Override
+           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                if(seekslider.isPressed())
+                    newValue=Duration.seconds(seekslider.getValue());
+               seekslider.setValue(newValue.toSeconds());
+              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
+           }
+       });
+       
+    }
+    
+    @FXML
+    private void screenshot(ActionEvent event) throws AWTException, IOException{
+        Robot robot=new Robot();
+        Rectangle rect=new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+        BufferedImage image=robot.createScreenCapture(rect);
+        WritableImage myImage=SwingFXUtils.toFXImage(image,null);
+        
+        ImageIO.write(image,"jpg",new File("out.jpg"));
+       
+    }
     
     private static String formatTime(Duration elapsed, Duration duration) {
    int intElapsed = (int)Math.floor(elapsed.toSeconds());
@@ -277,10 +486,11 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+                     
     }    
     
     
