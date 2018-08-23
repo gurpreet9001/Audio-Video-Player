@@ -79,17 +79,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button playlistid;
     
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-       
-       FileChooser fc=new FileChooser();
-       FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select a File (*.mp4)","*.mp4");
-       fc.getExtensionFilters().add(filter);
-       File file=fc.showOpenDialog(null);
-       filePath =file.toURI().toString();
-       
-       if(filePath !=null){
-       Media media =new Media(filePath);
+    void playmyvideo(String filePath){
+        System.out.println(filePath);
+        
+      Media media =new Media(filePath);
        mediaPlayer =new MediaPlayer(media);
        mediaView.setMediaPlayer(mediaPlayer);
        
@@ -133,6 +126,19 @@ public class FXMLDocumentController implements Initializable {
            }
        });
        
+    }
+    
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+       
+       FileChooser fc=new FileChooser();
+       FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select a File (*.mp4)","*.mp4");
+       fc.getExtensionFilters().add(filter);
+       File file=fc.showOpenDialog(null);
+       filePath =file.toURI().toString();
+       
+       if(filePath !=null){
+         playmyvideo(filePath);
        }
     }
     
@@ -162,64 +168,16 @@ public class FXMLDocumentController implements Initializable {
             }
     
     @FXML
-    @SuppressWarnings("empty-statement")
             public void dragdropped(DragEvent event) {
                Dragboard db = event.getDragboard();
                 List<File> files = (ArrayList<File>) db.getContent(DataFormat.FILES);
 
-            
                 if (files != null) {
                     File file = files.get(0);
                      filePath =file.toURI().toString();
                 
-                    System.out.println(filePath);
-       Media media =new Media(filePath);
-       mediaPlayer =new MediaPlayer(media);
-       mediaView.setMediaPlayer(mediaPlayer);
-                  
-        DoubleProperty width=mediaView.fitWidthProperty();
-       DoubleProperty height=mediaView.fitHeightProperty();
-       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
-       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
-       
-       
-       
-       slider.setValue(mediaPlayer.getVolume()*100);
-       
-       slider.valueProperty().addListener(new InvalidationListener() {
-           @Override
-           public void invalidated(Observable observable) {
-               mediaPlayer.setVolume(slider.getValue()/100);
-           }
-       });
-       
-      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
-    mediaPlayer.totalDurationProperty()));
-       
-       
-       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
-           @Override
-           public void handle(MouseEvent event) {
-              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
-           }
-       });
-       
-       mediaPlayer.play();
-       
-   
-       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-           @Override
-           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                if(seekslider.isPressed())
-                    newValue=Duration.seconds(seekslider.getValue());
-               seekslider.setValue(newValue.toSeconds());
-              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
-           }
-       });
-       
-       
+                    playmyvideo(filePath);
                 }
-   
                 event.consume();
             }
 
@@ -260,19 +218,16 @@ public class FXMLDocumentController implements Initializable {
   
     @FXML
     private void makeplaylist(ActionEvent event) throws IOException{
-     
-        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PlaylistFXML.fxml"));
-Parent root1 = (Parent) fxmlLoader.load();
-Stage stage = new Stage();
-stage.setScene(new Scene(root1));  
-stage.show();
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1));  
+        stage.show();
 
-
-      // get a handle to the stage
- Stage stage1 = (Stage) playlistid.getScene().getWindow();
-    // do what you have to do
-    stage1.close();
+       // get a handle to the stage
+       Stage stage1 = (Stage) playlistid.getScene().getWindow();
+       // do what you have to do
+       stage1.close();
     }
     
     int i=0;
@@ -280,160 +235,35 @@ stage.show();
       @FXML
     private void next(ActionEvent event){
         mediaPlayer.stop();
-        if(i<PlaylistFXMLController.arrlist.size()-1){
         
-        i++;}
+        if(i<PlaylistFXMLController.arrlist.size()-1)
+        i++;
         
         filePath =PlaylistFXMLController.arrlist.get(i);
                 
-       Media media =new Media(filePath);
-       mediaPlayer =new MediaPlayer(media);
-       mediaView.setMediaPlayer(mediaPlayer);
-       
-       DoubleProperty width=mediaView.fitWidthProperty();
-       DoubleProperty height=mediaView.fitHeightProperty();
-       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
-       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
-       
-       
-       
-       slider.setValue(mediaPlayer.getVolume()*100);
-       
-       slider.valueProperty().addListener(new InvalidationListener() {
-           @Override
-           public void invalidated(Observable observable) {
-               mediaPlayer.setVolume(slider.getValue()/100);
-           }
-       });
-       
-      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
-    mediaPlayer.totalDurationProperty()));
-       
-       
-       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
-           @Override
-           public void handle(MouseEvent event) {
-              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
-           }
-       });
-       
-       mediaPlayer.play();
-       
-   
-       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-           @Override
-           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                if(seekslider.isPressed())
-                    newValue=Duration.seconds(seekslider.getValue());
-               seekslider.setValue(newValue.toSeconds());
-              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
-           }
-       });
+      playmyvideo(filePath);
        
     }
     
     @FXML
     private void previous(ActionEvent event){
         mediaPlayer.stop();
-        if(i>0){
         
-        i--;}
+        if(i>0)
+        i--;
         
         filePath =PlaylistFXMLController.arrlist.get(i);
                 
-       Media media =new Media(filePath);
-       mediaPlayer =new MediaPlayer(media);
-       mediaView.setMediaPlayer(mediaPlayer);
-       
-       DoubleProperty width=mediaView.fitWidthProperty();
-       DoubleProperty height=mediaView.fitHeightProperty();
-       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
-       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
-       
-       
-       
-       slider.setValue(mediaPlayer.getVolume()*100);
-       
-       slider.valueProperty().addListener(new InvalidationListener() {
-           @Override
-           public void invalidated(Observable observable) {
-               mediaPlayer.setVolume(slider.getValue()/100);
-           }
-       });
-       
-      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
-    mediaPlayer.totalDurationProperty()));
-       
-       
-       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
-           @Override
-           public void handle(MouseEvent event) {
-              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
-           }
-       });
-       
-       mediaPlayer.play();
-       
-   
-       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-           @Override
-           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                if(seekslider.isPressed())
-                    newValue=Duration.seconds(seekslider.getValue());
-               seekslider.setValue(newValue.toSeconds());
-              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
-           }
-       });
+       playmyvideo(filePath);
        
     }
     
     @FXML
     private void startplaylist(ActionEvent event){
+        
         filePath =PlaylistFXMLController.arrlist.get(i);
                 
-       Media media =new Media(filePath);
-       mediaPlayer =new MediaPlayer(media);
-       mediaView.setMediaPlayer(mediaPlayer);
-       
-       DoubleProperty width=mediaView.fitWidthProperty();
-       DoubleProperty height=mediaView.fitHeightProperty();
-       width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
-       height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
-       
-       
-       
-       slider.setValue(mediaPlayer.getVolume()*100);
-       
-       slider.valueProperty().addListener(new InvalidationListener() {
-           @Override
-           public void invalidated(Observable observable) {
-               mediaPlayer.setVolume(slider.getValue()/100);
-           }
-       });
-       
-      seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
-    mediaPlayer.totalDurationProperty()));
-       
-       
-       seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
-           @Override
-           public void handle(MouseEvent event) {
-              mediaPlayer.seek(Duration.seconds(seekslider.getValue()));
-           }
-       });
-       
-       mediaPlayer.play();
-       
-   
-       mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-           @Override
-           public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                if(seekslider.isPressed())
-                    newValue=Duration.seconds(seekslider.getValue());
-               seekslider.setValue(newValue.toSeconds());
-              playTime.setText(formatTime(newValue, mediaPlayer.getMedia().getDuration()));
-           }
-       });
+      playmyvideo(filePath);
        
     }
     

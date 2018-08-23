@@ -36,37 +36,44 @@
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleButtonAction" text="Open">
                      <HBox.margin>
                         <Insets right="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#playVideo" text="Play">
                      <HBox.margin>
                         <Insets top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#pauseVideo" text="Pause">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#stopVideo" text="Stop">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#slowerVideo" text="&lt;&lt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#fasterVideo" text="&gt;&gt;">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#exitVideo" text="Exit">
                      <HBox.margin>
                         <Insets left="1.0" top="1.0" />
-                     </HBox.margin></Button>
+                     </HBox.margin>
+                  </Button>
                   <Slider fx:id="slider" focusTraversable="false" onInputMethodTextChanged="#keyPressed" onKeyPressed="#keyPressed" onKeyReleased="#keyPressed" onKeyTyped="#keyPressed" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets top="7.0" />
                      </HBox.margin>
                   </Slider>
-                  <Button fx:id="playlistid" focusTraversable="false" mnemonicParsing="false" onAction="#makeplaylist" text="Playlist" />
+                  <Button fx:id="playlistid" focusTraversable="false" mnemonicParsing="false" onAction="#makeplaylist" text="Set Playlist" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#startplaylist" text="Start" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#previous" text="&lt;-" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#next" text="-&gt;" />
