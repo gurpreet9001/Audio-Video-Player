@@ -44,7 +44,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -60,7 +62,8 @@ import javax.swing.text.html.ImageView;
  */
 public class FXMLDocumentController implements Initializable {
     
-    
+    @FXML
+    private HBox hbox;
     
     private MediaPlayer mediaPlayer;
     
@@ -80,6 +83,9 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private Button playlistid;
+    
+     @FXML
+    private StackPane sp;
     
     void playmyvideo(String filePath){
         
@@ -103,6 +109,28 @@ public class FXMLDocumentController implements Initializable {
                mediaPlayer.setVolume(slider.getValue()/100);
            }
        });
+       
+       Stage stage = (Stage) mediaView.getScene().getWindow();
+       mediaView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent doubleClicked) {
+                 if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==true){
+                hbox.setVisible(true);
+                seekslider.setVisible(true);
+                 }
+          
+            else if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==false){
+                hbox.setVisible(false);
+            seekslider.setVisible(false);
+            
+            
+            }
+            }
+        });
+       
+      
+
+
        
       seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
     mediaPlayer.totalDurationProperty()));
@@ -214,8 +242,8 @@ public class FXMLDocumentController implements Initializable {
         mediaPlayer.setRate(0.50);
     }
     @FXML
-    private void exitVideo(ActionEvent event){
-        //System.exit(0);
+    private void screenshot(ActionEvent event){
+  
         
          WritableImage writableImage = mediaView.snapshot(new SnapshotParameters(), null);
  
@@ -283,17 +311,7 @@ public class FXMLDocumentController implements Initializable {
       playmyvideo(filePath);
        
     }
-    
-    @FXML
-    private void screenshot(ActionEvent event) throws AWTException, IOException{
-        Robot robot=new Robot();
-        Rectangle rect=new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-        BufferedImage image=robot.createScreenCapture(rect);
-        WritableImage myImage=SwingFXUtils.toFXImage(image,null);
-        
-        ImageIO.write(image,"jpg",new File("out.jpg"));
-       
-    }
+   
     
     private static String formatTime(Duration elapsed, Duration duration) {
    int intElapsed = (int)Math.floor(elapsed.toSeconds());
