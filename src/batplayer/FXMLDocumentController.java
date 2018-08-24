@@ -23,6 +23,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.embed.swing.SwingFXUtils;
 
 import javafx.event.ActionEvent;
@@ -117,12 +119,53 @@ public class FXMLDocumentController implements Initializable {
                  if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==true){
                 hbox.setVisible(true);
                 seekslider.setVisible(true);
+               
                  }
           
             else if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==false){
                 hbox.setVisible(false);
             seekslider.setVisible(false);
+           
+            mediaView.setOnMouseExited(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              hbox.setVisible(true);
+                seekslider.setVisible(true);
+               }
+               
+            });
             
+            mediaView.setOnMouseEntered(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+               
+ 
+Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                }
+                return null;
+            }
+        };
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                
+      
+                             hbox.setVisible(false);
+                seekslider.setVisible(false);
+           
+            }
+        });
+        new Thread(sleeper).start();
+    }
+           
+           
+               
+            });
             
             }
             }
