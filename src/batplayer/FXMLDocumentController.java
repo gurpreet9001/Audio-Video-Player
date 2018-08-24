@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.util.Duration;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -240,10 +242,22 @@ Task<Void> sleeper = new Task<Void>() {
                 
             }
     
-    @FXML
+     @FXML
             public void dragdropped(DragEvent event) {
                Dragboard db = event.getDragboard();
-                List<File> files = (ArrayList<File>) db.getContent(DataFormat.FILES);
+               List<String> validExtensions = Arrays.asList("mp4", "mp3");
+               if (event.getDragboard().hasFiles()) {
+                    // All files on the dragboard must have an accepted extension
+                    if (!validExtensions.containsAll(
+                            event.getDragboard().getFiles().stream()
+                                    .map(file -> getExtension(file.getName()))
+                                    .collect(Collectors.toList()))) {
+
+                        event.consume();
+                        return;
+                    }
+
+                    List<File> files = (ArrayList<File>) db.getContent(DataFormat.FILES);
 
                 if (files != null) {
                     File file = files.get(0);
@@ -252,8 +266,23 @@ Task<Void> sleeper = new Task<Void>() {
                     playmyvideo(filePath);
                 }
                 event.consume();
+                }
+                
+                
+                
             }
 
+            // Method to to get extension of a file
+    private String getExtension(String fileName){
+        String extension = "";
+
+        int i = fileName.lastIndexOf('.');
+        if (i > 0 && i < fileName.length() - 1) //if the name is not empty
+            return fileName.substring(i + 1).toLowerCase();
+
+        return extension;
+    }
+    
     
     @FXML
     private void pauseVideo(ActionEvent event){
