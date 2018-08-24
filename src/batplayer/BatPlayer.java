@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,8 +37,11 @@ public class BatPlayer extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
       stage.show();
+      
+      
         
         stage.setTitle("BatPlayer");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("batman.png")));
         
         if (!BatPlayer.isSplashLoaded) {
                BatPlayer.isSplashLoaded = true;

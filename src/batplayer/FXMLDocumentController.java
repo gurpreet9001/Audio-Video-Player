@@ -207,7 +207,7 @@ Task<Void> sleeper = new Task<Void>() {
     private void handleButtonAction(ActionEvent event) {
        
        FileChooser fc=new FileChooser();
-       FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select a File (*.mp4)","*.mp4");
+       FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select file(.mp4),(.mp3)","*.mp4", "*.mp3");
        fc.getExtensionFilters().add(filter);
        File file=fc.showOpenDialog(null);
        filePath =file.toURI().toString();
