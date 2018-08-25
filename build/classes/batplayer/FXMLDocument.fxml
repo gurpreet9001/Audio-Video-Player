@@ -21,7 +21,7 @@
                <StackPane.margin>
                   <Insets bottom="5.0" />
                </StackPane.margin></MediaView>
-            <Slider fx:id="seekslider" focusTraversable="false" minWidth="-Infinity" prefHeight="14.0" prefWidth="561.0" style="-fx-background-color: F1EFEF;" StackPane.alignment="BOTTOM_CENTER">
+            <Slider fx:id="seekslider" focusTraversable="false" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="14.0" prefWidth="561.0" style="-fx-background-color: F1EFEF;" StackPane.alignment="BOTTOM_CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -76,11 +76,10 @@
                         <Insets top="7.0" />
                      </HBox.margin>
                   </Slider>
-                  <Button fx:id="playlistid" focusTraversable="false" mnemonicParsing="false" onAction="#makeplaylist" text="Set Playlist">
+                  <Button fx:id="playlistid" focusTraversable="false" mnemonicParsing="false" onAction="#makeplaylist" text="Playlist">
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin></Button>
-                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#startplaylist" text="Start" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#previous" text="&lt;-" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#next" text="-&gt;" />
                </children>

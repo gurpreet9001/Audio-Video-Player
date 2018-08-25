@@ -1,6 +1,7 @@
 
 package batplayer;
 
+import static batplayer.BatPlayer.myControllerHandle;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -37,6 +38,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -67,9 +69,9 @@ import javax.swing.text.html.ImageView;
 public class FXMLDocumentController implements Initializable {
     
     @FXML
-    private HBox hbox;
+    public HBox hbox;
     
-    private MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
     
     @FXML
     private MediaView mediaView;
@@ -77,13 +79,13 @@ public class FXMLDocumentController implements Initializable {
     private String filePath;
    
     @FXML
-    private Slider slider;
+    public Slider slider;
     
     @FXML
-    private Slider seekslider;
+    public Slider seekslider;
     
     @FXML
-    private Label playTime;
+    public Label playTime;
     
     @FXML
     private Button playlistid;
@@ -220,12 +222,45 @@ Task<Void> sleeper = new Task<Void>() {
     @FXML
     private void keyPressed(KeyEvent event) {
             switch (event.getCode()) {
-            case SPACE:
-               mediaPlayer.pause();
-                break;
-            case ENTER:mediaPlayer.play();break;       
-            default:
-                break;
+             case UP:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() + 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case DOWN:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() - 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case LEFT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() - 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case RIGHT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() + 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case M: 
+                        myControllerHandle.mediaPlayer.setVolume(0);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case SPACE:
+                        if(myControllerHandle.mediaPlayer.getStatus()==Status.PLAYING)
+                            myControllerHandle.mediaPlayer.pause();
+                        else{
+                            myControllerHandle.mediaPlayer.play();
+                            myControllerHandle.mediaPlayer.setRate(1);
+                        }
+                        break;
+                     case PLUS:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 1);break;
+                        
+                    case EQUALS:if(mediaPlayer.getRate()>=1)
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
+                    case ADD:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 0.5);
+                    break;
+                    case SUBTRACT:
+                        if(myControllerHandle.mediaPlayer.getRate()>=1){
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);}
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
             }
             
         }
@@ -298,20 +333,12 @@ Task<Void> sleeper = new Task<Void>() {
         mediaPlayer.stop();
     }
     @FXML
-    private void fastVideo(ActionEvent event){
-        mediaPlayer.setRate(1.5);
-    }
-    @FXML
     private void fasterVideo(ActionEvent event){
-         mediaPlayer.setRate(2);
-    }
-    @FXML
-    private void slowVideo(ActionEvent event){
-        mediaPlayer.setRate(0.75);
+         mediaPlayer.setRate(mediaPlayer.getRate() + 1);
     }
     @FXML
     private void slowerVideo(ActionEvent event){
-        mediaPlayer.setRate(0.50);
+        mediaPlayer.setRate(mediaPlayer.getRate() - 1);
     }
     @FXML
     private void screenshot(ActionEvent event){
@@ -339,7 +366,9 @@ Task<Void> sleeper = new Task<Void>() {
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));  
         stage.show();
-
+stage.setTitle("Make Playlist");
+        stage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("bat.png")));
+        
        // get a handle to the stage
        Stage stage1 = (Stage) playlistid.getScene().getWindow();
        // do what you have to do
@@ -375,14 +404,7 @@ Task<Void> sleeper = new Task<Void>() {
        
     }
     
-    @FXML
-    private void startplaylist(ActionEvent event){
-        
-        filePath =PlaylistFXMLController.arrlist.get(i);
-                
-      playmyvideo(filePath);
-       
-    }
+   
    
     
     private static String formatTime(Duration elapsed, Duration duration) {
@@ -427,7 +449,7 @@ Task<Void> sleeper = new Task<Void>() {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-                     
+                    
     }    
     
     

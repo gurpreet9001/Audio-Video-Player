@@ -5,17 +5,24 @@
  */
 package batplayer;
 
+import static batplayer.FXMLDocumentController.mediaPlayer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,10 +35,12 @@ public class BatPlayer extends Application {
     
     
     static boolean isSplashLoaded=false;
+    static FXMLDocumentController myControllerHandle;
     
     @Override
     public void start(Stage stage) throws Exception {
         
+       
         Parent pane = FXMLLoader.load(getClass().getResource(("SplashFXML.fxml")));
 
         Scene scene = new Scene(pane);
@@ -39,9 +48,10 @@ public class BatPlayer extends Application {
       stage.show();
       
       
+      
         
         stage.setTitle("BatPlayer");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("batman.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("bat.png")));
         
         if (!BatPlayer.isSplashLoaded) {
                BatPlayer.isSplashLoaded = true;
@@ -66,9 +76,11 @@ public class BatPlayer extends Application {
             fadeOut.setOnFinished((e) -> {
                
                  try {
-                    Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                     FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+                        Parent root = loader.load();
                 Scene scene1 = new Scene(root);
-                 
+                  myControllerHandle = (FXMLDocumentController)loader.getController();
+                  
         scene1.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent doubleClicked) {
@@ -79,6 +91,54 @@ public class BatPlayer extends Application {
                 stage.setFullScreen(true);}
             }
         });
+        
+       scene1.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() + 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case DOWN:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() - 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case LEFT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() - 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case RIGHT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() + 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case M: 
+                        myControllerHandle.mediaPlayer.setVolume(0);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case SPACE:
+                        if(myControllerHandle.mediaPlayer.getStatus()==Status.PLAYING)
+                            myControllerHandle.mediaPlayer.pause();
+                        else{
+                            myControllerHandle.mediaPlayer.play();
+                            myControllerHandle.mediaPlayer.setRate(1);
+                        }
+                        break;
+                     case PLUS:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 1);break;
+                        
+                    case EQUALS:if(mediaPlayer.getRate()>=1)
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
+                    case ADD:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 0.5);
+                    break;
+                    case SUBTRACT:
+                        if(myControllerHandle.mediaPlayer.getRate()>=1){
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);}
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
+                }
+            }
+        });
+        
                 stage.setScene(scene1);
       stage.show();
 
@@ -90,10 +150,15 @@ public class BatPlayer extends Application {
        
         
     }
+    
+  
+
+    
+
    
     public static void main(String[] args) {
-        launch(args);
         
+        launch(args);
     }
     
 }

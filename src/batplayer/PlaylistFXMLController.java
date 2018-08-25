@@ -5,6 +5,8 @@
  */
 package batplayer;
 
+import static batplayer.BatPlayer.myControllerHandle;
+import static batplayer.FXMLDocumentController.mediaPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,13 +33,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -50,9 +55,15 @@ public class PlaylistFXMLController implements Initializable {
 
     
     private String filePath;
-    
+        private String filename;
+
      @FXML
     private Button playlistid;
+     
+       ObservableList<String> list = FXCollections.observableArrayList();
+            
+            @FXML
+            ListView<String> myplaylist ;
     
     public static ArrayList<String> arrlist = new ArrayList<String>(30);
     int i=0;
@@ -69,11 +80,22 @@ public class PlaylistFXMLController implements Initializable {
                 
             }
          
-            ObservableList<String> list = FXCollections.observableArrayList();
+          
             
             @FXML
-            ListView<String> myplaylist ;
-            
+    private void openexplorer(ActionEvent event){
+        FileChooser fc=new FileChooser();
+       FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select file(.mp4),(.mp3)","*.mp4", "*.mp3");
+       fc.getExtensionFilters().add(filter);
+       File file=fc.showOpenDialog(null);
+       filePath =file.toURI().toString();
+       list.removeAll(list);
+       filename=file.getName();
+                     list.add(filename);
+                     
+                     arrlist.add(filePath);
+                     myplaylist.getItems().addAll(list);
+    }
             
           @FXML
             public void dragdropped(DragEvent event) {
@@ -95,19 +117,15 @@ public class PlaylistFXMLController implements Initializable {
                  if (files != null) {
                     File file = files.get(0);
                      filePath =file.toURI().toString();
-                     //items.add(0, filePath);
+                     filename=file.getName();
                      list.removeAll(list);
-                     list.add(filePath);
+                     list.add(filename);
                      arrlist.add(filePath);
                      myplaylist.getItems().addAll(list);
                      
                 }
-                 
                 event.consume();
-                }
-                
-                
-                
+                } 
             }
 
             // Method to to get extension of a file
@@ -119,27 +137,91 @@ public class PlaylistFXMLController implements Initializable {
             return fileName.substring(i + 1).toLowerCase();
 
         return extension;
-    }
-    
-            
-            
+    }         
 
              @FXML
     private void submitplaylist(ActionEvent event) throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
-Parent root1 = (Parent) fxmlLoader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+                        Parent root1 = loader.load();
+ myControllerHandle = (FXMLDocumentController)loader.getController();
+ 
 Stage stage = new Stage();
-stage.setScene(new Scene(root1));  
+Scene scene1 = new Scene(root1);
+stage.setScene(scene1);  
 stage.show();
+filePath =PlaylistFXMLController.arrlist.get(i);
+                
+      myControllerHandle.playmyvideo(filePath);
 
-
-
+stage.setTitle("BatPlayer");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("bat.png")));
+        
+         scene1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent doubleClicked) {
+                 if(doubleClicked.getClickCount()==2 && stage.isFullScreen()==true){
+                stage.setFullScreen(false);}
+          
+            else if(doubleClicked.getClickCount()==2){
+                stage.setFullScreen(true);}
+            }
+        });
+        
+       scene1.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                
+                switch (event.getCode()) {
+                    case UP:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() + 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case DOWN:
+                        myControllerHandle.mediaPlayer.setVolume(myControllerHandle.mediaPlayer.getVolume() - 0.03);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case LEFT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() - 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case RIGHT:
+                        myControllerHandle.seekslider.setValue(Duration.seconds(myControllerHandle.seekslider.getValue()).toSeconds() + 5);mediaPlayer.seek(Duration.seconds(myControllerHandle.seekslider.getValue()));break;
+                    case M: 
+                        myControllerHandle.mediaPlayer.setVolume(0);myControllerHandle.slider.setValue(mediaPlayer.getVolume()*100);break;
+                    case SPACE:
+                        if(myControllerHandle.mediaPlayer.getStatus()==MediaPlayer.Status.PLAYING)
+                            myControllerHandle.mediaPlayer.pause();
+                        else{
+                            myControllerHandle.mediaPlayer.play();
+                            myControllerHandle.mediaPlayer.setRate(1);
+                        }
+                        break;   
+                   case PLUS:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 1);break;
+                        
+                    case EQUALS:if(mediaPlayer.getRate()>=1)
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
+                    case ADD:if(myControllerHandle.mediaPlayer.getRate()==0.5)
+                                   myControllerHandle.mediaPlayer.setRate(1); 
+                            else
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() + 0.5);
+                    break;
+                    case SUBTRACT:
+                        if(myControllerHandle.mediaPlayer.getRate()>=1){
+                        myControllerHandle.mediaPlayer.setRate(myControllerHandle.mediaPlayer.getRate() - 0.5);}
+                    else
+                        myControllerHandle.mediaPlayer.setRate(0.5);
+                        break;
+                }
+            }
+        });
+        
 // get a handle to the stage
  Stage stage1 = (Stage) playlistid.getScene().getWindow();
     // do what you have to do
     stage1.close();
+                       
     }
-            
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
