@@ -1,10 +1,31 @@
 # Video & Audio Player
 Media player using javafx and scene builder on using netbeans IDE  
   
-Features:-  
-Open with a splash screen and then the main player
-Open file through file Chooser     
-Open directly by drag and dropping on player's screen       
-Change media play speed  
-Shows remaining time and total time of video along with seekbar for video and audio  
-Double click to fullscreen and double click to get back from fullscreen  
+START--
+load a splash screen with fade_in and fade_out(here is of batman's logo)
+icon of batman_logo on main executable and batman image in taskbar icon
+
+FEATURES--
+play,pause,fast_forward,slow,change volume,stop,mute
+play file by file explorer or directly drag and drop on media player
+a SEEKSLIDER whose value can be changed by mouse or through keyboard
+show CURRENT TIME of video/audio and TOTAL TIME of video/audio
+Double click to get FULLSCREEN or get out of it
+take SREENSHOT at any point of video/audio
+
+KEYBOARD SHORTCUTS--
+plus = fast forward
+minus = slower rate
+space = pause while playing and play if paused
+M = mute
+up arrow key = volume up
+down arrow key = volume down
+right arrow key = seek forward
+left arrow key = seek backward
+Alt+f4 = close
+
+PLAYLIST--
+make playlist
+choose through file explorer or drag and drop to add files in playlist box
+play next video at end of first video 
+next and previous button to go forward and backward in playlist
