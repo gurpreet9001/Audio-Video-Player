@@ -21,7 +21,7 @@
                <StackPane.margin>
                   <Insets bottom="5.0" />
                </StackPane.margin></MediaView>
-            <Slider fx:id="seekslider" focusTraversable="false" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="14.0" prefWidth="561.0" style="-fx-background-color: F1EFEF;" StackPane.alignment="BOTTOM_CENTER">
+            <Slider fx:id="seekslider" cacheShape="false" centerShape="false" focusTraversable="false" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="14.0" prefWidth="561.0" scaleShape="false" style="-fx-background-color: F1EFEF;" StackPane.alignment="BOTTOM_CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -71,7 +71,7 @@
                         <Insets left="1.0" top="1.0" />
                      </HBox.margin>
                   </Button>
-                  <Slider fx:id="slider" focusTraversable="false" onInputMethodTextChanged="#keyPressed" onKeyPressed="#keyPressed" onKeyReleased="#keyPressed" onKeyTyped="#keyPressed" HBox.hgrow="NEVER">
+                  <Slider fx:id="slider" focusTraversable="false" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets top="7.0" />
                      </HBox.margin>

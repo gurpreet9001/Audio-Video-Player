@@ -55,13 +55,12 @@ public class PlaylistFXMLController implements Initializable {
 
     
     private String filePath;
-        private String filename;
+    private String filename;
 
      @FXML
     private Button playlistid;
      
-       ObservableList<String> list = FXCollections.observableArrayList();
-            
+       ObservableList<String> list = FXCollections.observableArrayList();            
             @FXML
             ListView<String> myplaylist ;
     
@@ -81,7 +80,7 @@ public class PlaylistFXMLController implements Initializable {
             }
          
           
-            
+           //choose video for playlist through file explorer 
             @FXML
     private void openexplorer(ActionEvent event){
         FileChooser fc=new FileChooser();
@@ -97,6 +96,7 @@ public class PlaylistFXMLController implements Initializable {
                      myplaylist.getItems().addAll(list);
     }
             
+           //choose video for playlist through drag and drop
           @FXML
             public void dragdropped(DragEvent event) {
                Dragboard db = event.getDragboard();
@@ -139,6 +139,7 @@ public class PlaylistFXMLController implements Initializable {
         return extension;
     }         
 
+    // submit the playlist and directly start playing the playlist
              @FXML
     private void submitplaylist(ActionEvent event) throws IOException{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
@@ -150,10 +151,11 @@ Scene scene1 = new Scene(root1);
 stage.setScene(scene1);  
 stage.show();
 filePath =PlaylistFXMLController.arrlist.get(i);
-                
+       
+//controller of main fxml controller
       myControllerHandle.playmyvideo(filePath);
 
-stage.setTitle("BatPlayer");
+        stage.setTitle("BatPlayer");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("bat.png")));
         
          scene1.setOnMouseClicked(new EventHandler<MouseEvent>() {

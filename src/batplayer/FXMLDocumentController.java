@@ -100,15 +100,15 @@ public class FXMLDocumentController implements Initializable {
        mediaPlayer =new MediaPlayer(media);
        mediaView.setMediaPlayer(mediaPlayer);
        
+       // automatic fit to screen
        DoubleProperty width=mediaView.fitWidthProperty();
        DoubleProperty height=mediaView.fitHeightProperty();
        width.bind(Bindings.selectDouble(mediaView.sceneProperty(),"width"));
        height.bind(Bindings.selectDouble(mediaView.sceneProperty(),"height"));
        
        
-       
+       // volume slider get and set
        slider.setValue(mediaPlayer.getVolume()*100);
-       
        slider.valueProperty().addListener(new InvalidationListener() {
            @Override
            public void invalidated(Observable observable) {
@@ -116,6 +116,7 @@ public class FXMLDocumentController implements Initializable {
            }
        });
        
+       // operations on full screen 
        Stage stage = (Stage) mediaView.getScene().getWindow();
        mediaView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -130,6 +131,8 @@ public class FXMLDocumentController implements Initializable {
                 hbox.setVisible(false);
             seekslider.setVisible(false);
            
+            
+            // show controls on touching bottom of screen
             mediaView.setOnMouseExited(new EventHandler<MouseEvent>() {
            @Override
            public void handle(MouseEvent event) {
@@ -139,6 +142,8 @@ public class FXMLDocumentController implements Initializable {
                
             });
             
+            
+            // on full screen hide the controls if mouse moved to normal screen and wait 2 seconds before disappering
             mediaView.setOnMouseEntered(new EventHandler<MouseEvent>() {
            @Override
            public void handle(MouseEvent event) {
@@ -148,7 +153,7 @@ Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                 }
                 return null;
@@ -165,24 +170,17 @@ Task<Void> sleeper = new Task<Void>() {
             }
         });
         new Thread(sleeper).start();
-    }
-           
-           
-               
+    }  
             });
             
             }
             }
         });
        
-      
-
-
-       
       seekslider.maxProperty().bind(Bindings.createDoubleBinding(() -> mediaPlayer.getTotalDuration().toSeconds(),
     mediaPlayer.totalDurationProperty()));
        
-       
+     //changing value of seekslider by mouse  
        seekslider.setOnMouseClicked(new EventHandler<MouseEvent>() {
            @Override
            public void handle(MouseEvent event) {
@@ -192,7 +190,7 @@ Task<Void> sleeper = new Task<Void>() {
        
        mediaPlayer.play();
        
-   
+   // for moving seekslider
        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
            @Override
            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -203,11 +201,20 @@ Task<Void> sleeper = new Task<Void>() {
            }
        });
        
+       
+       //go to next video on end of first video
+       mediaPlayer.setOnEndOfMedia(() -> {
+           if(i<PlaylistFXMLController.arrlist.size()-1){
+                i++;
+                playmyvideo(PlaylistFXMLController.arrlist.get(i));}
+            }); 
+       
     }
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
        
+        // choose file to play through file explorer
        FileChooser fc=new FileChooser();
        FileChooser.ExtensionFilter filter=new FileChooser.ExtensionFilter("Select file(.mp4),(.mp3)","*.mp4", "*.mp3");
        fc.getExtensionFilters().add(filter);
@@ -282,7 +289,7 @@ Task<Void> sleeper = new Task<Void>() {
                Dragboard db = event.getDragboard();
                List<String> validExtensions = Arrays.asList("mp4", "mp3");
                if (event.getDragboard().hasFiles()) {
-                    // All files on the dragboard must have an accepted extension
+                    // files on the dragboard must have an proper extension
                     if (!validExtensions.containsAll(
                             event.getDragboard().getFiles().stream()
                                     .map(file -> getExtension(file.getName()))
@@ -307,13 +314,13 @@ Task<Void> sleeper = new Task<Void>() {
                 
             }
 
-            // Method to to get extension of a file
+            // helping function to get extension of a file
     private String getExtension(String fileName){
         String extension = "";
 
-        int i = fileName.lastIndexOf('.');
-        if (i > 0 && i < fileName.length() - 1) //if the name is not empty
-            return fileName.substring(i + 1).toLowerCase();
+        int j = fileName.lastIndexOf('.');
+        if (j > 0 && j < fileName.length() - 1) //if the name is not empty
+            return fileName.substring(j + 1).toLowerCase();
 
         return extension;
     }

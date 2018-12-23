@@ -40,23 +40,17 @@ public class BatPlayer extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-       
+       // Load Splash screen first
         Parent pane = FXMLLoader.load(getClass().getResource(("SplashFXML.fxml")));
-
-        Scene scene = new Scene(pane);
+       Scene scene = new Scene(pane);
         stage.setScene(scene);
       stage.show();
-      
-      
-      
-        
         stage.setTitle("BatPlayer");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("bat.png")));
         
+        //splash screen setup
         if (!BatPlayer.isSplashLoaded) {
                BatPlayer.isSplashLoaded = true;
-            
-
             FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
@@ -73,14 +67,17 @@ public class BatPlayer extends Application {
                 fadeOut.play();
             });
 
+            // all operations start after splash is finished
             fadeOut.setOnFinished((e) -> {
                
                  try {
                      FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                         Parent root = loader.load();
                 Scene scene1 = new Scene(root);
+                // get controller from FXMLDoucument to manipulate mediaplayer directly from any external file
                   myControllerHandle = (FXMLDocumentController)loader.getController();
                   
+                  //get fullscreen or come out of it
         scene1.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent doubleClicked) {
@@ -92,6 +89,7 @@ public class BatPlayer extends Application {
             }
         });
         
+        //keylisteners
        scene1.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -140,7 +138,7 @@ public class BatPlayer extends Application {
         });
         
                 stage.setScene(scene1);
-      stage.show();
+                stage.show();
 
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
