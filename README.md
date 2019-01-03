@@ -1,3 +1,6 @@
+Download--https://drive.google.com/open?id=1b8n461jUNJY_U1lg__OGQOnmBJtqrmxI
+Latest Java Version--https://java.com/en/download/win10.jsp
+
 # Video & Audio Player
 Media player using javafx and scene builder on using netbeans IDE  
   
